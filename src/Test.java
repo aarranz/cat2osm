@@ -33,7 +33,7 @@ public class Test {
 						filesU[i].getName().toUpperCase().equals("SUBPARCE"))
 				try{
 				System.out.println("Leyendo "+ filesU[i].getName() +" Urbano.");
-				shapes.addAll(catastro.shpParser(new File(filesU[i] + "\\" + filesU[i].getName() + ".SHP")));
+				shapes.addAll(catastro.shpParser(new File(filesU[i] + File.separator + filesU[i].getName() + ".SHP")));
 				}
 			catch(Exception e){}
 			}
@@ -65,7 +65,7 @@ public class Test {
 						filesR[i].getName().toUpperCase().equals("SUBPARCE"))
 				try{
 				System.out.println("Leyendo "+ filesR[i].getName() +" Rustico.");
-				shapes.addAll(catastro.shpParser(new File(filesR[i] + "\\" + filesR[i].getName() + ".SHP")));
+				shapes.addAll(catastro.shpParser(new File(filesR[i] + File.separator + filesR[i].getName() + ".SHP")));
 				}
 			catch(Exception e){}
 			}

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -262,7 +263,7 @@ public class ShapeEjes extends Shape {
 	 * @throws IOException
 	 */
 	public String getVia(long v) throws IOException{
-		InputStream inputStream  = new FileInputStream(Config.get("UrbanoSHPDir") + "\\CARVIA\\CARVIA.DBF");
+		InputStream inputStream  = new FileInputStream(Config.get("UrbanoSHPDir") + File.separator + "CARVIA" + File.separator + "CARVIA.DBF");
 		DBFReader reader = new DBFReader(inputStream); 
 
 		Object[] rowObjects;

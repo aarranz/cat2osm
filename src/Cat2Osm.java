@@ -365,7 +365,7 @@ public class Cat2Osm {
 	public void printNodes(Map <NodeOsm, Long> nodes) throws IOException{
 		
 		// Archivo temporal para escribir los nodos
-		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + "\\tempNodes.osm");
+		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + File.separator + "tempNodes.osm");
 		BufferedWriter outNodes = new BufferedWriter(fstreamNodes);
 		
 		String huso = (Config.get("Huso")+ " " +Config.get("Hemisferio"));
@@ -389,7 +389,7 @@ public class Cat2Osm {
 	public void printNodesShapesOrder(List<Shape> shapes, Map <NodeOsm, Long> nodes) throws IOException{
 		
 		// Archivo temporal para escribir los nodos
-		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + "\\tempNodes.osm");
+		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + File.separator + "tempNodes.osm");
 		BufferedWriter outNodes = new BufferedWriter(fstreamNodes);
 		
 		String huso = (Config.get("Huso")+ " " +Config.get("Hemisferio"));
@@ -411,7 +411,7 @@ public class Cat2Osm {
 	public void printWays(Map <WayOsm, Long> ways) throws IOException{
 		
 		// Archivo temporal para escribir los ways
-		FileWriter fstreamWays = new FileWriter(Config.get("resultPath") + "\\tempWays.osm");
+		FileWriter fstreamWays = new FileWriter(Config.get("resultPath") + File.separator + "tempWays.osm");
 		BufferedWriter outWays = new BufferedWriter(fstreamWays);
 		
 		Iterator<Entry<WayOsm, Long>> it = ways.entrySet().iterator();
@@ -433,7 +433,7 @@ public class Cat2Osm {
 	public void printWaysShapesOrder( List<Shape> shapes, Map <WayOsm, Long> ways) throws IOException{
 		
 		// Archivo temporal para escribir los ways
-		FileWriter fstreamWays = new FileWriter(Config.get("resultPath") + "\\tempWays.osm");
+		FileWriter fstreamWays = new FileWriter(Config.get("resultPath") + File.separator + "tempWays.osm");
 		BufferedWriter outWays = new BufferedWriter(fstreamWays);
 		
 		// Escribimos todos los ways y sus referencias a los nodos en el archivo
@@ -454,7 +454,7 @@ public class Cat2Osm {
 	public void printRelations( Map <RelationOsm, Long> relations) throws IOException{
 		
 		// Archivo temporal para escribir los ways
-		FileWriter fstreamRelations = new FileWriter(Config.get("resultPath") + "\\tempRelations.osm");
+		FileWriter fstreamRelations = new FileWriter(Config.get("resultPath") + File.separator + "tempRelations.osm");
 		BufferedWriter outRelations = new BufferedWriter(fstreamRelations);
 		
 		Iterator<Entry<RelationOsm, Long>> it = relations.entrySet().iterator();
@@ -478,10 +478,10 @@ public class Cat2Osm {
 		String path = Config.get("resultPath");
 		
 		// Borrar archivo con el mismo nombre si existe, porque sino concatenaria el nuevo
-		new File(path + "\\"+ filename +".osm").delete();
+		new File(path + File.separator + ""+ filename +".osm").delete();
 		
 		// Archivo al que se le concatenan los nodos, ways y relations
-		FileWriter fstreamOsm = new FileWriter(path + "\\"+ filename +".osm", true);
+		FileWriter fstreamOsm = new FileWriter(path + File.separator + ""+ filename +".osm", true);
 		BufferedWriter outOsm = new BufferedWriter(fstreamOsm);
 		
 		// Juntamos los archivos en uno, al de los nodos le concatenamos el de ways y el de relations
@@ -496,15 +496,15 @@ public class Cat2Osm {
 		
 		// Concatenamos todos los archivos
 		String str;
-		BufferedReader inNodes = new BufferedReader(new FileReader(path + "\\tempNodes.osm"));
+		BufferedReader inNodes = new BufferedReader(new FileReader(path + File.separator + "tempNodes.osm"));
 		while ((str = inNodes.readLine()) != null)
 			outOsm.write(str+"\n");
 		
-		BufferedReader inWays = new BufferedReader(new FileReader(path + "\\tempWays.osm"));
+		BufferedReader inWays = new BufferedReader(new FileReader(path + File.separator + "tempWays.osm"));
 		while ((str = inWays.readLine()) != null)
 			outOsm.write(str+"\n");
 
-		BufferedReader inRelations = new BufferedReader(new FileReader(path + "\\tempRelations.osm"));
+		BufferedReader inRelations = new BufferedReader(new FileReader(path + File.separator + "tempRelations.osm"));
 		while ((str = inRelations.readLine()) != null)
 			outOsm.write(str+"\n");
 
@@ -518,9 +518,9 @@ public class Cat2Osm {
 		inWays.close();
 		inRelations.close();
 		
-		boolean delNodes = (new File(path+ "\\tempNodes.osm")).delete();
-		boolean delWays = (new File(path + "\\tempWays.osm")).delete();
-		boolean delRelations = (new File(path + "\\tempRelations.osm")).delete();
+		boolean delNodes = (new File(path+ File.separator + "tempNodes.osm")).delete();
+		boolean delWays = (new File(path + File.separator + "tempWays.osm")).delete();
+		boolean delRelations = (new File(path + File.separator + "tempRelations.osm")).delete();
 		
 		if (!delNodes || !delWays || !delRelations)
 		System.out.println("(Imposible borrar alguno de los archivos temporales)");

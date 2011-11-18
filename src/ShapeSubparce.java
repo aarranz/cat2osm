@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -215,7 +216,7 @@ public class ShapeSubparce extends Shape {
 	 * @throws IOException
 	 */
 	public String getTipoCultivo(String s) throws IOException{
-		InputStream inputStream  = new FileInputStream(Config.get("RuralSHPDir") + "\\RUSUBPARCELA\\RUSUBPARCELA.DBF");
+		InputStream inputStream  = new FileInputStream(Config.get("RuralSHPDir") + File.separator + "RUSUBPARCELA" + File.separator + "RUSUBPARCELA.DBF");
 		DBFReader reader = new DBFReader(inputStream); 
 
 		
