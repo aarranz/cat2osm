@@ -57,7 +57,7 @@ public class WayOsm {
 		return result;
 	}
 
-	/** Sobreescribir el equals, para que compare los nodos aunque estén en otro orden
+	/** Sobreescribir el equals, para que compare los nodos aunque estÃ©n en otro orden
 	 * para que dos ways con los mismos nodos pero en distinta direccion se detecten como iguales.
 	 */
 	@Override

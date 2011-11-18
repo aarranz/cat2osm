@@ -887,7 +887,7 @@ public class Cat2Osm {
 			c.setRefCatastral(line.substring(30,44));
 			//c.addAttribute("NUMERO DE ORDEN DEL ELEMENTO CUYO VALOR SE REPARTE",line.substring(44,48));
 			//c.addAttribute("CALIFICACION CATASTRAL DE LA SUBPARCELA",line.substring(48,50));
-			//c.addAttribute("BLOQUE REPETITIVO HASTA 15 VECES",line.substring(50,999)); //TODO ¿Necesario?
+			//c.addAttribute("BLOQUE REPETITIVO HASTA 15 VECES",line.substring(50,999)); //TODO Â¿Necesario?
 
 			c.addAttribute("source", "catastro");
 			c.addAttribute("addr:country","ES");
@@ -917,7 +917,7 @@ public class Cat2Osm {
 			c.addAttribute("DENOMINACION DE LA CLASE DE CULTIVO",line.substring(67,107));
 			//c.addAttribute("INTENSIDAD PRODUCTIVA",line.substring(107,109));
 			c.addAttribute("INTENSIDAD PRODUCTIVA",line.substring(107,109));
-			//c.addAttribute("CODIGO DE MODALIDAD DE REPARTO",line.substring(126,129)); //TODO ¿Necesario?
+			//c.addAttribute("CODIGO DE MODALIDAD DE REPARTO",line.substring(126,129)); //TODO Â¿Necesario?
 
 			c.addAttribute("source", "catastro");
 			c.addAttribute("addr:country","ES");
@@ -974,21 +974,21 @@ public class Cat2Osm {
 		else if (codigo.equals("BJ   "))return "Bajada";
 		else if (codigo.equals("BO   "))return "Barrio";
 		else if (codigo.equals("BR   "))return "Barranco";
-		else if (codigo.equals("CA   "))return "Cañada";
+		else if (codigo.equals("CA   "))return "CaÃ±ada";
 		else if (codigo.equals("CG   "))return "Colegio/Cigarral";
 		else if (codigo.equals("CH   "))return "Chalet";
 		else if (codigo.equals("CI   "))return "Cinturon";
-		else if (codigo.equals("CJ   "))return "Calleja/Callejón";
+		else if (codigo.equals("CJ   "))return "Calleja/CallejÃ³n";
 		else if (codigo.equals("CM   "))return "Camino";
 		else if (codigo.equals("CN   "))return "Colonia";
 		else if (codigo.equals("CO   "))return "Concejo/Colegio";
 		else if (codigo.equals("CP   "))return "Campa/Campo";
 		else if (codigo.equals("CR   "))return "Carretera/Carrera";
-		else if (codigo.equals("CS   "))return "Caserío";
+		else if (codigo.equals("CS   "))return "CaserÃ­o";
 		else if (codigo.equals("CT   "))return "Cuesta/Costanilla";
 		else if (codigo.equals("CU   "))return "Conjunto";
-		else if (codigo.equals("DE   "))return "Detrás";
-		else if (codigo.equals("DP   "))return "Diputación";
+		else if (codigo.equals("DE   "))return "DetrÃ¡s";
+		else if (codigo.equals("DP   "))return "DiputaciÃ³n";
 		else if (codigo.equals("DS   "))return "Diseminados";
 		else if (codigo.equals("ED   "))return "Edificios";
 		else if (codigo.equals("EM   "))return "Extramuros";
@@ -1000,7 +1000,7 @@ public class Cat2Osm {
 		else if (codigo.equals("FN   "))return "Finca";
 		else if (codigo.equals("GL   "))return "Glorieta";
 		else if (codigo.equals("GR   "))return "Grupo";
-		else if (codigo.equals("GV   "))return "Gran Vía";
+		else if (codigo.equals("GV   "))return "Gran VÃ­a";
 		else if (codigo.equals("HT   "))return "Huerta/Huerto";
 		else if (codigo.equals("JR   "))return "Jardines";
 		else if (codigo.equals("LD   "))return "Lado/Ladera";
@@ -1014,16 +1014,16 @@ public class Cat2Osm {
 		else if (codigo.equals("PB   "))return "Poblado";
 		else if (codigo.equals("PD   "))return "Partida";
 		else if (codigo.equals("PJ   "))return "Pasaje/Pasadizo";
-		else if (codigo.equals("PL   "))return "Polígono";
+		else if (codigo.equals("PL   "))return "PolÃ­gono";
 		else if (codigo.equals("PM   "))return "Paramo";
 		else if (codigo.equals("PQ   "))return "Parroquia/Parque";
-		else if (codigo.equals("PR   "))return "Prolongación/Continuación";
+		else if (codigo.equals("PR   "))return "ProlongaciÃ³n/ContinuaciÃ³n";
 		else if (codigo.equals("PS   "))return "Paseo";
 		else if (codigo.equals("PT   "))return "Puente";
 		else if (codigo.equals("PZ   "))return "Plaza";
 		else if (codigo.equals("QT   "))return "Quinta";
 		else if (codigo.equals("RB   "))return "Rambla";
-		else if (codigo.equals("RC   "))return "Rincón/Rincona";
+		else if (codigo.equals("RC   "))return "RincÃ³n/Rincona";
 		else if (codigo.equals("RD   "))return "Ronda";
 		else if (codigo.equals("RM   "))return "Ramal";
 		else if (codigo.equals("RP   "))return "Rampa";
@@ -1032,12 +1032,12 @@ public class Cat2Osm {
 		else if (codigo.equals("SA   "))return "Salida";
 		else if (codigo.equals("SD   "))return "Senda";
 		else if (codigo.equals("SL   "))return "Solar";
-		else if (codigo.equals("SN   "))return "Salón";
+		else if (codigo.equals("SN   "))return "SalÃ³n";
 		else if (codigo.equals("SU   "))return "Subida";
 		else if (codigo.equals("TN   "))return "Terrenos";
 		else if (codigo.equals("TO   "))return "Torrente";
-		else if (codigo.equals("TR   "))return "Travesía";
-		else if (codigo.equals("UR   "))return "Urbanización";
+		else if (codigo.equals("TR   "))return "TravesÃ­a";
+		else if (codigo.equals("UR   "))return "UrbanizaciÃ³n";
 		else if (codigo.equals("VR   "))return "Vereda";
 		else if (codigo.equals("CY   "))return "Caleya";
 
