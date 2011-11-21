@@ -1,7 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -19,8 +23,8 @@ public class ShapeConstru extends Shape {
 	private String constru; // Campo Constru solo en Constru.shp
 	private List<ShapeAttribute> atributos;
 
-	public ShapeConstru(SimpleFeature f) {
-		super(f);
+	public ShapeConstru(SimpleFeature f, MathTransform transform) throws MismatchedDimensionException, TransformException {
+		super(f, transform);
 
 		this.poligons = new ArrayList<LineString>();
 
@@ -29,6 +33,7 @@ public class ShapeConstru extends Shape {
 
 			// Poligono, trae el primer punto de cada poligono repetido al final.
 			Geometry geom = (Geometry) f.getDefaultGeometry();
+			geom = JTS.transform(geom, this.CRSTransform);
 
 			// Cogemos cada poligono del shapefile (por lo general sera uno solo
 			// que puede tener algun subpoligono)

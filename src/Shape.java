@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.MathTransform;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -11,11 +13,15 @@ public abstract class Shape {
 	private List<ShapeAttribute> atributos;
 	protected long fechaAlta; // Formato AAAAMMDD
 	protected long fechaBaja;
+	protected MathTransform CRSTransform;
 
 	/**Constructor
 	 * @param f Linea del archivo shp
+	 * @throws FactoryException
 	 */
-	public Shape(SimpleFeature f){
+	public Shape(SimpleFeature f, MathTransform transform) {
+
+		this.CRSTransform = transform;
 
 		// Algunos conversores de DATUM cambian el formato de double a int en el .shp
 		// FECHAALATA y FECHABAJA siempre existen

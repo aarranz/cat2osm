@@ -1,6 +1,8 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,9 +15,17 @@ import java.util.Map.Entry;
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
+import org.geotools.referencing.CRS;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
 
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
@@ -24,13 +34,15 @@ import com.vividsolutions.jts.geom.LineString;
 public class Cat2Osm {
 	
 	static Cat2OsmUtils utils;
-	
+	private static CoordinateReferenceSystem dstCRS;
+
 	/** Constructor
 	 * @param utils Clase utils en la que se almacenan los nodos, ways y relaciones 
 	 * y tiene funciones para manejarlos
 	 */
 	public Cat2Osm (Cat2OsmUtils utils){
 		Cat2Osm.utils = utils;
+		dstCRS = DefaultGeographicCRS.WGS84;
 	}
 	
 	
@@ -38,8 +50,13 @@ public class Cat2Osm {
 	 * @param f Archivo a parsear
 	 * @returns List<Shape> Lista de los elementos parseados
 	 * @throws IOException
+	 * @throws TransformException 
+	 * @throws FactoryException 
+	 * @throws NoSuchElementException 
+	 * @throws IllegalArgumentException 
+	 * @throws MismatchedDimensionException 
 	 */
-	public List<Shape> shpParser(File f) throws IOException {
+	public List<Shape> shpParser(File f) throws IOException, MismatchedDimensionException, IllegalArgumentException, FactoryException, TransformException {
 		
 		FileDataStore store = FileDataStoreFinder.getDataStore(f);
 		FeatureReader<SimpleFeatureType, SimpleFeature> reader = 
@@ -48,13 +65,17 @@ public class Cat2Osm {
 		List<Shape> shapeList = new ArrayList<Shape>();
 		long fechaDesde = Long.parseLong(Config.get("FechaDesde"));
 		long fechaHasta = Long.parseLong(Config.get("FechaHasta"));
+
+		CoordinateReferenceSystem shapeFileCRS = getShapeFileCRS(f);
+		MathTransform transform = CRS.findMathTransform(shapeFileCRS, dstCRS, false);
 		
+
 		// Creamos el shape dependiendo de su tipo
 		if (f.getName().toUpperCase().equals("MASA.SHP"))
 
 			// Shapes del archivo MASA.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeMasa(reader.next());
+				Shape shape = new ShapeMasa(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -65,7 +86,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo PARCELA.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeParcela(reader.next());
+				Shape shape = new ShapeParcela(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -76,7 +97,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo SUBPARCE.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeSubparce(reader.next());
+				Shape shape = new ShapeSubparce(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -87,7 +108,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo CONSTRU.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeConstru(reader.next());
+				Shape shape = new ShapeConstru(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -98,7 +119,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo ELEMTEX.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeElemtex(reader.next());
+				Shape shape = new ShapeElemtex(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -109,7 +130,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo ELEMPUN.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeElempun(reader.next());
+				Shape shape = new ShapeElempun(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -120,7 +141,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo ELEMLIN.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeElemlin(reader.next());
+				Shape shape = new ShapeElemlin(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -131,7 +152,7 @@ public class Cat2Osm {
 
 			// Shapes del archivo EJES.SHP
 			while (reader.hasNext()) {
-				Shape shape = new ShapeEjes(reader.next());
+				Shape shape = new ShapeEjes(reader.next(), transform);
 
 				// Si cumple estar entre las fechas
 				if (shape != null && shape.checkShapeDate(fechaDesde, fechaHasta))
@@ -144,7 +165,52 @@ public class Cat2Osm {
 		return shapeList;
 	}
 
-	
+	private static String readFileAsString(File file) throws java.io.IOException{
+	    byte[] buffer = new byte[(int) file.length()];
+	    BufferedInputStream f = null;
+	    try {
+	        f = new BufferedInputStream(new FileInputStream(file));
+	        f.read(buffer);
+	    } finally {
+	        if (f != null) try { f.close(); } catch (IOException ignored) { }
+	    }
+	    return new String(buffer);
+	}
+
+	private CoordinateReferenceSystem getShapeFileCRS(File shape) throws NoSuchAuthorityCodeException, FactoryException, IOException {
+		String path = shape.getPath();
+		File prjFile = new File(path.replaceAll("\\.SHP", ".PRJ"));
+
+		String wkt = readFileAsString(prjFile);
+//		String wkt = "PROJCS[\"ED50 / UTM zone 30N\","
+//                + "GEOGCS[\"ED50\","
+//                +     "DATUM[\"European Datum 1950\","
+//                +     "SPHEROID[\"International 1924\",6378388.0, 297.0, AUTHORITY[\"EPSG\",\"7022\"]],"
+//                +     "TOWGS84[-157.89, -17.16, -78.41,2.118, 2.697, -1.434, -1.1097046576093785],"
+//                +     "AUTHORITY[\"EPSG\",\"6230\"]],"
+//                +     "PRIMEM[\"Greenwich\", 0.0,AUTHORITY[\"EPSG\",\"8901\"]],"
+//                +     "UNIT[\"degree\",0.017453292519943295],"
+//                + "AXIS[\"Geodetic longitude\", EAST],"
+//                + "AXIS[\"Geodetic latitude\", NORTH],"
+//                + "AUTHORITY[\"EPSG\",\"4230\"]],"
+//                + "PROJECTION[\"Transverse Mercator\",AUTHORITY[\"EPSG\",\"9807\"]],"
+//                + "PARAMETER[\"central_meridian\", -3.0],"
+//                + "PARAMETER[\"latitude_of_origin\", 0.0],"
+//                + "PARAMETER[\"scale_factor\", 0.9996],"
+//                + "PARAMETER[\"false_easting\", 500000.0],"
+//                + "PARAMETER[\"false_northing\", 0.0],"
+//                + "UNIT[\"m\", 1.0],"
+//                + "AXIS[\"Easting\", EAST],"
+//                + "AXIS[\"Northing\", NORTH],"
+//                + "AUTHORITY[\"EPSG\",\"23030\"]]";
+		//'+proj=utm +zone=30 +ellps=intl +units=m +towgs84=-157.89,-17.16,-78.41,2.118,2.697,-1.434,-1.1097046576093785 +nodefs';
+		CoordinateReferenceSystem crs = CRS.parseWKT(wkt);
+//		return crs;
+
+		String code = CRS.lookupIdentifier(crs, true);
+		return CRS.decode(code);
+	}
+
 	/** Metodo para parsear los shapes cuyas geografias vienen dadas como
 	 * MultiPolygon, como MASA.SHP, PARCELA.SHP y CONSTRU.SHP
 	 * Asigna los valores al shape, sus nodos, sus ways y relation
@@ -368,14 +434,12 @@ public class Cat2Osm {
 		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + File.separator + "tempNodes.osm");
 		BufferedWriter outNodes = new BufferedWriter(fstreamNodes);
 		
-		String huso = (Config.get("Huso")+ " " +Config.get("Hemisferio"));
-		
 		Iterator<Entry<NodeOsm, Long>> it = nodes.entrySet().iterator();
 		
 		// Escribimos todos los nodos
 		while(it.hasNext()){
 			Map.Entry e = (Map.Entry)it.next();
-			outNodes.write(((NodeOsm) e.getKey()).printNode((Long) e.getValue(), huso));
+			outNodes.write(((NodeOsm) e.getKey()).printNode((Long) e.getValue()));
 		}
 		outNodes.close();
 	}
@@ -392,12 +456,10 @@ public class Cat2Osm {
 		FileWriter fstreamNodes = new FileWriter(Config.get("resultPath") + File.separator + "tempNodes.osm");
 		BufferedWriter outNodes = new BufferedWriter(fstreamNodes);
 		
-		String huso = (Config.get("Huso")+ " " +Config.get("Hemisferio"));
-		
 		// Escribimos todos los nodos
 		for(Shape shape : shapes){
 			for (int y = 0; y < shape.getNodes().size(); y++)
-			outNodes.write( ((NodeOsm) utils.getKeyFromValue((Map<Object, Long>) ((Object)nodes), shape.getNodes().get(y))).printNode((Long) shape.getNodes().get(y), huso));
+			outNodes.write( ((NodeOsm) utils.getKeyFromValue((Map<Object, Long>) ((Object)nodes), shape.getNodes().get(y))).printNode((Long) shape.getNodes().get(y)));
 		}
 		outNodes.close();
 	}

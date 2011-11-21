@@ -77,33 +77,19 @@ public class NodeOsm {
 	public void setY(Coordinate c) {
 		this.coor.y = c.y;
 	}
-
-	/** Convierte coordenadas UTM a Lat/Long
-	 * @param utm String en formato "Huso Northing Easting" Ejemplo: "30 N 4266508 257016"
-	 * @returns double[] [0]Lat [1]Lon                    
-	 */
-	public static double[] UTM2LatLong(String utm)
-	{
-		CoordinateConversion obj=new CoordinateConversion();
-		return obj.utm2LatLon(utm);
-	}
 	
 	/** Imprime en el formato Osm el nodo con la informacion
 	 * @param id Id del nodo
 	 * @param huso Huso geografico para la conversion UTM a Lat/Long
 	 * @return Devuelve en un String el nodo listo para imprimir
 	 */
-	public String printNode(Long id, String huso){
+	public String printNode(Long id) {
 		String s = null;
-			
-		double [] coor = UTM2LatLong(huso + " " + this.coor.x + " " + this.coor.y);
 
 		// Hora para el timestamp
 		Date date = new java.util.Date();
-		s = ("<node id=\""+ id +"\" version=\"6\" timestamp=\""+ new Timestamp(date.getTime()) +"\" uid=\"533679\" user=\"AnderPijoan\" lat=\""+coor[0]+"\" lon=\""+coor[1]+"\">\n");
-		//s = ("<node id=\""+ id +"\" version=\"6\" timestamp=\""+ new Timestamp(date.getTime()) +"\" uid=\"533679\" user=\"AnderPijoan\" lat=\""+this.coor.y+"\" lon=\""+this.coor.x+"\">\n");
-		
-		
+		s = ("<node id=\""+ id +"\" version=\"6\" timestamp=\""+ new Timestamp(date.getTime()) +"\" uid=\"533679\" user=\"AnderPijoan\" lat=\"" + this.coor.y + "\" lon=\"" + this.coor.x +"\">\n");		
+
 		if (tags != null)
 			for (int x = 0; x < tags.size(); x++)
 				s += "<tag k=\""+tags.get(x)[0]+"\" v=\""+tags.get(x)[1]+"\"/>\n";

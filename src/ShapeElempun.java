@@ -1,10 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.Point;
 
 
@@ -15,13 +20,14 @@ public class ShapeElempun extends Shape {
 	private String ttggss; // Campo TTGGSS solo en Elempun.shp
 	private List<ShapeAttribute> atributos;
 
-	public ShapeElempun(SimpleFeature f) {
-		super(f);
+	public ShapeElempun(SimpleFeature f, MathTransform transform) throws MismatchedDimensionException, TransformException {
+		super(f, transform);
 
 		// Elempun trae la geometria en formato Point
 		if ( f.getDefaultGeometry().getClass().getName().equals("com.vividsolutions.jts.geom.Point")){
 
 			Point p = (Point) f.getDefaultGeometry();
+			p = (Point) JTS.transform(p, this.CRSTransform);
 
 			coor = p.getCoordinate();
 		}

@@ -5,7 +5,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.linuxense.javadbf.DBFReader;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -22,13 +26,14 @@ public class ShapeElemlin extends Shape {
 	private String ttggss; // Campo TTGGSS en Elemlin.shp
 	private List<ShapeAttribute> atributos;
 	
-	public ShapeElemlin(SimpleFeature f) {
-		super(f);
+	public ShapeElemlin(SimpleFeature f, MathTransform transform) throws MismatchedDimensionException, TransformException {
+		super(f, transform);
 
 		// Elemtex trae la geometria en formato MultiLineString
 		if ( f.getDefaultGeometry().getClass().getName().equals("com.vividsolutions.jts.geom.MultiLineString")){
 
 			MultiLineString l = (MultiLineString) f.getDefaultGeometry();
+			l = (MultiLineString) JTS.transform(l, this.CRSTransform);
 			line = new LineString(l.getCoordinates(),null , 0);
 
 		}

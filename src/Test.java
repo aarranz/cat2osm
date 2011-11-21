@@ -3,13 +3,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+
 public class Test {
 
 	/**
 	 * @param args
 	 * @throws IOException 
+	 * @throws FactoryException 
+	 * @throws NoSuchAuthorityCodeException 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, NoSuchAuthorityCodeException, FactoryException {
 		
 		// Ruta al fichero de configuracion por parametro
 		new Config(args[0]);

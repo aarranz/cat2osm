@@ -5,7 +5,12 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.geotools.geometry.jts.JTS;
 import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 import com.linuxense.javadbf.DBFReader;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -29,10 +34,13 @@ public class ShapeSubparce extends Shape {
 	/** Constructor
 	 * @param f Linea del archivo shp
 	 * @throws IOException 
+	 * @throws FactoryException 
+	 * @throws TransformException 
+	 * @throws MismatchedDimensionException 
 	 */
-	public ShapeSubparce(SimpleFeature f) throws IOException {
+	public ShapeSubparce(SimpleFeature f, MathTransform transform) throws IOException, MismatchedDimensionException, TransformException {
 		
-		super(f);
+		super(f, transform);
 		
 		this.poligons = new ArrayList<LineString>();
 
@@ -41,6 +49,7 @@ public class ShapeSubparce extends Shape {
 
 			// Poligono, trae el primer punto de cada poligono repetido al final.
 			Geometry geom = (Geometry) f.getDefaultGeometry();
+			geom = JTS.transform(geom, this.CRSTransform);
 
 			// Cogemos cada poligono del shapefile (por lo general sera uno solo
 			// que puede tener algun subpoligono)
